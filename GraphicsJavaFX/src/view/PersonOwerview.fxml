@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Drawing">
+   <children>
+      <SplitPane dividerPositions="0.36454849498327757" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <TextField fx:id="numberText" focusTraversable="false" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="186.0" promptText="type some number..." AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
+                  <Button fx:id="drawButton" layoutX="15.0" layoutY="53.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#drawCliked" prefHeight="27.0" prefWidth="179.0" text="Show Data Time" textAlignment="CENTER" textFill="#1b1a1a" textOverrun="LEADING_ELLIPSIS" wrapText="true" AnchorPane.leftAnchor="15.0">
+                     <font>
+                        <Font name="Arial" size="15.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="graphicButton" layoutX="75.0" layoutY="95.0" mnemonicParsing="false" onAction="#graphLine" prefHeight="27.0" prefWidth="58.0" text="Draw" />
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <LineChart fx:id="graphicLine" alternativeColumnFillVisible="true" animated="false" layoutX="-130.0" layoutY="-34.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="398.0" prefWidth="384.0" title="Graphic" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                    <xAxis>
+                      <CategoryAxis animated="false" label="Quantity" prefHeight="13.0" prefWidth="327.0" side="BOTTOM" fx:id="xAxis" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis fx:id="yAxis" animated="false" label="Amplitude" side="LEFT" />
+                    </yAxis>
+                  </LineChart>
+                  <ScrollBar layoutY="386.0" onDragDetected="#xScrilling" prefHeight="12.0" prefWidth="384.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" fx:id="xScroll" />
+                  <ScrollBar fx:id="yScroll" layoutX="372.0" layoutY="-1.0" onDragDetected="#yScrolling" orientation="VERTICAL" prefHeight="388.0" prefWidth="12.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
