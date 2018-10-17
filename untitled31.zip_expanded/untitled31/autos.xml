@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<autos>
+    <auto>
+        <marka>Audi</marka>
+        <price>28500</price>
+        <speed>250</speed>
+    </auto>
+    <auto>
+        <marka>BMW</marka>
+        <price>36200</price>
+        <speed>280</speed>
+    </auto>
+    <auto>
+        <marka>Honda</marka>
+        <price>18000</price>
+        <speed>180</speed>
+    </auto>
+</autos>

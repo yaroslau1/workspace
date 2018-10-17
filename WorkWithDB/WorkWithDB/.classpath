@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.23-bin.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/mysql-connector-java-5.1.23-bin.jar"/>
 	<classpathentry kind="lib" path="C:/Users/samoilovich_y/workspace/WorkWithDB/WorkWithDB/lib/mysql-connector-java-5.1.23-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Users/samoilovich_y/workspace/WorkWithDB/mysql-connector-java-5.1.23-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
