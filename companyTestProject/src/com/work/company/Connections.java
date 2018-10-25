@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class MyConnection {
+public class Connections {
 
 	private String url = "jdbc:mysql://localhost:3306/world"+
 			"?verifyServerCertificate=false"+
@@ -22,10 +22,10 @@ public class MyConnection {
 	private Statement statement;
 	private ResultSet resultSet;
 
-	public MyConnection() {
+	public Connections() {
 	}
 
-	public MyConnection(String url, String user, String pass) {
+	public Connections(String url, String user, String pass) {
 		this.url = url;
 		this.user = user;
 		this.pass = pass;

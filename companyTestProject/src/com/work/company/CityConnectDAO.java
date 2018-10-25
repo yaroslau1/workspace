@@ -9,22 +9,87 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CityConnectDAO implements CityDAO {
-		
-	private MyConnection myConnection = new MyConnection();
+
+	private Connection connection;
+	private Statement statement;
+	private ResultSet resultSet;
+
+	public void openConnection() {
+		String url = "jdbc:mysql://localhost:3306/world"+
+				"?verifyServerCertificate=false"+
+				"&useSSL=false"+
+				"&requireSSL=false"+
+				"&serverTimezone=UTC"+
+				"&useLegacyDatetimeCode=false"+
+				"&serverTimezone=UTC";
+		String user = "root";
+		String pass = "1234";
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();  	
+			connection = DriverManager.getConnection(url, user, pass);
+			statement = connection.createStatement();
+		} catch (SQLException e) {
+			System.out.println(e);
+		} catch (InstantiationException e) {			
+			System.out.println(e);
+		} catch (IllegalAccessException e) {			
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {			
+			e.printStackTrace();
+		}
+	}
+	
+	public void openConnection(String url, String user, String pass) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();  	
+			connection = DriverManager.getConnection(url, user, pass);
+			statement = connection.createStatement();
+		} catch (SQLException e) {
+			System.out.println(e);
+		} catch (InstantiationException e) {			
+			System.out.println(e);
+		} catch (IllegalAccessException e) {			
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {			
+			e.printStackTrace();
+		}
+	}
+	
+	public ResultSet getSQLQuery(String sqlQuery) {
+		try {
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(sqlQuery);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return this.resultSet; 
+	}
+	
+	public void closeConnection() {
+		try {
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
+			statement.close();
+		} catch (SQLException e) {				
+			e.printStackTrace();
+		}
+		try {
+			connection.close();
+		} catch (SQLException e) {				
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public List<City> getAll() {		
 		List<City> listCity  = new LinkedList<>();
-		//Statement statement = null;
-		ResultSet resultSet = null;
-		
+
 		try {
-			/*Class.forName("com.mysql.cj.jdbc.Driver").newInstance();  	
-			connection = DriverManager.getConnection(url, user, pass);
-			statement = connection.createStatement();*/
-			myConnection.openConnection();
-			resultSet = myConnection.getSQLQuery("SELECT ID, Name, Population FROM city");
-			//resultSet = statement.executeQuery("SELECT ID, Name, Population FROM city");
+			openConnection();
+			getSQLQuery("SELECT ID, Name, Population FROM city");
 			while(resultSet.next()){
 				City city = new City();
 				String id = resultSet.getString("ID");
@@ -37,21 +102,17 @@ public class CityConnectDAO implements CityDAO {
 			} 
 		} catch (SQLException e) {
 			System.out.println(e);
-		}
-		
+		}	
 		return listCity;
 	}
 
 	@Override
 	public List<City> findByName(String name) {
 		List<City> listCity  = new LinkedList<>();
-		/*
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();  	
-			connection = DriverManager.getConnection(url, user, pass);
-			Statement statement = connection.createStatement(); 
 
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM city");
+		try {
+			openConnection();
+			getSQLQuery("SELECT ID, Name, Population FROM city");
 			while(resultSet.next()){
 				City city = new City();;
 				String nameForSearch = resultSet.getString("Name");
@@ -63,20 +124,10 @@ public class CityConnectDAO implements CityDAO {
 					city.setPopularion(Integer.parseInt(population));
 					listCity.add(city); 
 				}
-			}
-			connection.close(); 
-		} catch (ClassNotFoundException e) {			
-			System.out.println(e);
+			} 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			System.out.println(e);
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+		} 
 		return listCity;
 	}
 
