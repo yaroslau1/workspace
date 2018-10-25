@@ -13,6 +13,10 @@ public class CityConnectDAO implements CityDAO {
 	private Connection connection;
 	private Statement statement;
 	private ResultSet resultSet;
+	
+	public CityConnectDAO() {
+		openConnection();
+	}
 
 	public void openConnection() {
 		String url = "jdbc:mysql://localhost:3306/world"+
@@ -88,7 +92,6 @@ public class CityConnectDAO implements CityDAO {
 		List<City> listCity  = new LinkedList<>();
 
 		try {
-			openConnection();
 			getSQLQuery("SELECT ID, Name, Population FROM city");
 			while(resultSet.next()){
 				City city = new City();
@@ -111,7 +114,6 @@ public class CityConnectDAO implements CityDAO {
 		List<City> listCity  = new LinkedList<>();
 
 		try {
-			openConnection();
 			getSQLQuery("SELECT ID, Name, Population FROM city");
 			while(resultSet.next()){
 				City city = new City();;

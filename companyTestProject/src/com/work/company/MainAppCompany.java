@@ -9,7 +9,6 @@ public class MainAppCompany {
 		long end;
 		start = System.currentTimeMillis();
 		CityConnectDAO cityConnectDAO = new CityConnectDAO();
-		cityConnectDAO.openConnection();
 		System.out.println(cityConnectDAO.getAll());
 		System.out.println(cityConnectDAO.findByName("Minsk"));
 		System.out.println(cityConnectDAO.findByName("Brest"));
