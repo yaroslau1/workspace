@@ -1,7 +1,5 @@
 package com.work.company;
 
-import javax.activation.MimeTypeParameterList;
-
 public class MainAppCompany {
 
 	public static void main(String[] args) {
