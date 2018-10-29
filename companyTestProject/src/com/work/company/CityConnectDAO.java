@@ -22,8 +22,6 @@ import java.util.Properties;
 public class CityConnectDAO implements CityDAO {
 
 	private Connection connection;
-	private Statement statement;
-	private ResultSet resultSet;
 
 	public CityConnectDAO() {
 		String driverName = null;
@@ -32,27 +30,16 @@ public class CityConnectDAO implements CityDAO {
 		String pass = null;	
 		InputStream reader = null;
 		Properties property = new Properties();
-		Thread currentThread = Thread.currentThread();
-		ClassLoader classLoader = currentThread.getContextClassLoader();
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
 		try {
 
-			reader = classLoader.getResourceAsStream("com/work/company/properties.properties");
-			System.out.println(reader);
-			System.out.println(classLoader.getResource("D:/property/properties.properties"));
-			reader = this.getClass().getClassLoader().getResourceAsStream("D:/property/properties.properties");
-			System.out.println(reader);
-			if (reader == null) {
-				System.out.println("Error file reading");
-			} 
-				property.load(reader);
-		
-
+			reader = classLoader.getResourceAsStream("properties.properties");
+			property.load(reader);
 			driverName = property.getProperty("driver");
 			url = property.getProperty("url");
 			user = property.getProperty("user");
 			pass = property.getProperty("pass");
-			//System.out.println(url);
 
 		} catch (IOException e) {
 			System.out.println(e);
@@ -64,7 +51,6 @@ public class CityConnectDAO implements CityDAO {
 		try {
 			Class.forName(driverName).newInstance();  	
 			connection = DriverManager.getConnection(url, user, pass);
-			statement = connection.createStatement();
 		} catch (SQLException e) {
 			System.out.println(e);
 		} catch (InstantiationException e) {			
@@ -76,27 +62,7 @@ public class CityConnectDAO implements CityDAO {
 		}
 	}
 
-	private ResultSet getSQLQuery(String sqlQuery) {
-		try {
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(sqlQuery);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return this.resultSet; 
-	}
-
 	public void closeConnection() {
-		try {
-			resultSet.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		try {
-			statement.close();
-		} catch (SQLException e) {				
-			e.printStackTrace();
-		}
 		try {
 			connection.close();
 		} catch (SQLException e) {				
@@ -107,9 +73,12 @@ public class CityConnectDAO implements CityDAO {
 	@Override
 	public List<City> getAll() {		
 		List<City> listCity  = new LinkedList<>();
+		Statement statement = null;
+		ResultSet resultSet = null;
 
 		try {
-			getSQLQuery("SELECT ID, Name, Population FROM city");
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("SELECT ID, Name, Population FROM city");			
 			while(resultSet.next()){
 				City city = new City();
 				String id = resultSet.getString("ID");
@@ -120,18 +89,34 @@ public class CityConnectDAO implements CityDAO {
 				city.setPopularion(Integer.parseInt(population));
 				listCity.add(city);
 			} 
+			statement.close();
+			resultSet.close();
 		} catch (SQLException e) {
 			System.out.println(e);
-		}	
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {				
+				e.printStackTrace();
+			}
+			try {
+				resultSet.close();
+			} catch (SQLException e) {				
+				e.printStackTrace();
+			}			
+		}
 		return listCity;
 	}
 
 	@Override
 	public List<City> findByName(String name) {
 		List<City> listCity  = new LinkedList<>();
+		Statement statement = null;
+		ResultSet resultSet = null;
 
 		try {
-			getSQLQuery("SELECT ID, Name, Population FROM city");
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("SELECT ID, Name, Population FROM city");
 			while(resultSet.next()){
 				City city = new City();;
 				String nameForSearch = resultSet.getString("Name");
@@ -146,7 +131,18 @@ public class CityConnectDAO implements CityDAO {
 			} 
 		} catch (SQLException e) {
 			System.out.println(e);
-		} 
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {				
+				e.printStackTrace();
+			}
+			try {
+				resultSet.close();
+			} catch (SQLException e) {				
+				e.printStackTrace();
+			}			
+		}
 		return listCity;
 	}
 
