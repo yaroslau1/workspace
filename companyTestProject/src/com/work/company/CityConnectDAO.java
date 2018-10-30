@@ -1,20 +1,12 @@
 package com.work.company;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -34,7 +26,7 @@ public class CityConnectDAO implements CityDAO {
 
 		try {
 
-			reader = classLoader.getResourceAsStream("properties.properties");
+			reader = classLoader.getResourceAsStream("com/work/company/properties.properties");
 			property.load(reader);
 			driverName = property.getProperty("driver");
 			url = property.getProperty("url");
@@ -43,11 +35,17 @@ public class CityConnectDAO implements CityDAO {
 
 		} catch (IOException e) {
 			System.out.println(e);
-		} 			
-		openConnection(driverName, url, user, pass);
+		} finally {
+			try {
+				reader.close();
+			} catch (IOException e) {				
+				e.printStackTrace();
+			}
+		}
+		open(driverName, url, user, pass);
 	}
 
-	private void openConnection(String driverName, String url, String user, String pass) {
+	private void open(String driverName, String url, String user, String pass) {
 		try {
 			Class.forName(driverName).newInstance();  	
 			connection = DriverManager.getConnection(url, user, pass);
@@ -62,7 +60,7 @@ public class CityConnectDAO implements CityDAO {
 		}
 	}
 
-	public void closeConnection() {
+	public void close() {
 		try {
 			connection.close();
 		} catch (SQLException e) {				
@@ -89,8 +87,6 @@ public class CityConnectDAO implements CityDAO {
 				city.setPopularion(Integer.parseInt(population));
 				listCity.add(city);
 			} 
-			statement.close();
-			resultSet.close();
 		} catch (SQLException e) {
 			System.out.println(e);
 		} finally {

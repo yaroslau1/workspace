@@ -11,7 +11,7 @@ public class MainAppCompany {
 		System.out.println(cityConnectDAO.findByName("Minsk"));
 		System.out.println(cityConnectDAO.findByName("Brest"));
 		System.out.println(cityConnectDAO.findByName("Grodno"));
-		cityConnectDAO.closeConnection();
+		cityConnectDAO.close();
 		end = System.currentTimeMillis();
 		System.out.println(end - start + "Congratulation!!!!");
 	}
