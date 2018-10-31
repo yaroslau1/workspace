@@ -11,69 +11,56 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-public class CityConnectDAO implements CityDAO {
+public class CityConnectDAO implements CityDAO, AutoCloseable {
 
 	private Connection connection;
 
-	public CityConnectDAO() {
-		String driverName = null;
-		String url = null;
-		String user = null;
-		String pass = null;	
-		InputStream reader = null;
+	public CityConnectDAO() throws DAOException {
 		Properties property = new Properties();
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
+		InputStream reader = classLoader.getResourceAsStream("com/work/company/properties.properties");
 		try {
-
-			reader = classLoader.getResourceAsStream("com/work/company/properties.properties");
 			property.load(reader);
-			driverName = property.getProperty("driver");
-			url = property.getProperty("url");
-			user = property.getProperty("user");
-			pass = property.getProperty("pass");
-
+			String driverName = property.getProperty("driver");
+			String url = property.getProperty("url");
+			String user = property.getProperty("user");
+			String pass = property.getProperty("pass");
+			reader.close();
+			open(driverName, url, user, pass);
 		} catch (IOException e) {
-			System.out.println(e);
-		} finally {
-			try {
-				reader.close();
-			} catch (IOException e) {				
-				e.printStackTrace();
-			}
+			throw new DAOException(e);
 		}
-		open(driverName, url, user, pass);
 	}
 
-	private void open(String driverName, String url, String user, String pass) {
+	private void open(String driverName, String url, String user, String pass) throws DAOException {
 		try {
-			Class.forName(driverName).newInstance();  	
+			Class.forName(driverName).newInstance();
 			connection = DriverManager.getConnection(url, user, pass);
+		} catch (InstantiationException e) {
+			throw new DAOException(e);
+		} catch (IllegalAccessException e) {
+			throw new DAOException(e);
+		} catch (ClassNotFoundException e) {
+			throw new DAOException(e);
 		} catch (SQLException e) {
-			System.out.println(e);
-		} catch (InstantiationException e) {			
-			System.out.println(e);
-		} catch (IllegalAccessException e) {			
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {			
-			e.printStackTrace();
+			throw new DAOException(e);
 		}
+
 	}
 
-	public void close() {
+	public void close() throws DAOException {	
 		try {
 			connection.close();
-		} catch (SQLException e) {				
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {
+			throw new DAOException(e);
+		}	
 	}
 
 	@Override
-	public List<City> getAll() {		
-		List<City> listCity  = new LinkedList<>();
+	public List<City> getAll() throws DAOException {		
+		List<City> listCity  = new LinkedList<>();		
 		Statement statement = null;
 		ResultSet resultSet = null;
-
 		try {
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("SELECT ID, Name, Population FROM city");			
@@ -88,28 +75,27 @@ public class CityConnectDAO implements CityDAO {
 				listCity.add(city);
 			} 
 		} catch (SQLException e) {
-			System.out.println(e);
+			throw new DAOException(e);
 		} finally {
 			try {
 				statement.close();
-			} catch (SQLException e) {				
-				e.printStackTrace();
+			} catch (SQLException e) {
+				throw new DAOException(e);
 			}
 			try {
 				resultSet.close();
-			} catch (SQLException e) {				
-				e.printStackTrace();
-			}			
+			} catch (SQLException e) {
+				throw new DAOException(e);
+			}
 		}
 		return listCity;
 	}
 
 	@Override
-	public List<City> findByName(String name) {
+	public List<City> findByName(String name) throws DAOException {
 		List<City> listCity  = new LinkedList<>();
 		Statement statement = null;
 		ResultSet resultSet = null;
-
 		try {
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("SELECT ID, Name, Population FROM city");
@@ -124,21 +110,21 @@ public class CityConnectDAO implements CityDAO {
 					city.setPopularion(Integer.parseInt(population));
 					listCity.add(city); 
 				}
-			} 
+			}		
 		} catch (SQLException e) {
-			System.out.println(e);
+			throw new DAOException(e);
 		} finally {
 			try {
 				statement.close();
-			} catch (SQLException e) {				
-				e.printStackTrace();
+			} catch (SQLException e) {
+				throw new DAOException(e);
 			}
 			try {
 				resultSet.close();
-			} catch (SQLException e) {				
-				e.printStackTrace();
-			}			
-		}
+			} catch (SQLException e) {
+				throw new DAOException(e);
+			}
+		}			
 		return listCity;
 	}
 
