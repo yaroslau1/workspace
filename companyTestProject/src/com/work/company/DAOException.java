@@ -5,23 +5,23 @@ import java.sql.SQLException;
 
 public class DAOException extends Exception {
 	
-	public DAOException(SQLException e) {
+	public DAOException(String description, SQLException e) {
 		initCause(e);
 	}
 	
-	public DAOException(InstantiationException e) {
+	public DAOException(String description, InstantiationException e) {
 		initCause(e);
 	}
 	
-	public DAOException(IllegalAccessException e) {
+	public DAOException(String description, IllegalAccessException e) {
 		initCause(e);
 	}
 	
-	public DAOException(ClassNotFoundException e) {
+	public DAOException(String description, ClassNotFoundException e) {
 		initCause(e);
 	}
 	
-	public DAOException(IOException e) {
+	public DAOException(String description, IOException e) {
 		initCause(e);
 	}
 

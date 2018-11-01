@@ -26,44 +26,33 @@ public class CityConnectDAO implements CityDAO, AutoCloseable {
 			String user = property.getProperty("user");
 			String pass = property.getProperty("pass");
 			reader.close();
-			open(driverName, url, user, pass);
-		} catch (IOException e) {
-			throw new DAOException(e);
-		}
-	}
-
-	private void open(String driverName, String url, String user, String pass) throws DAOException {
-		try {
 			Class.forName(driverName).newInstance();
 			connection = DriverManager.getConnection(url, user, pass);
+		} catch (IOException e) {
+			throw new DAOException("Error in constructor with file opening", e);
 		} catch (InstantiationException e) {
-			throw new DAOException(e);
+			throw new DAOException("Error in constructor: object Class not found", e);
 		} catch (IllegalAccessException e) {
-			throw new DAOException(e);
+			throw new DAOException("Error in constructor with access to DB", e);
 		} catch (ClassNotFoundException e) {
-			throw new DAOException(e);
+			throw new DAOException("Error in constructor with ClassPath", e);
 		} catch (SQLException e) {
-			throw new DAOException(e);
+			throw new DAOException("Error in constructor with SQLQuery", e);
 		}
-
 	}
 
 	public void close() throws DAOException {	
 		try {
 			connection.close();
 		} catch (SQLException e) {
-			throw new DAOException(e);
+			throw new DAOException("Error in close method", e);
 		}	
 	}
 
 	@Override
 	public List<City> getAll() throws DAOException {		
-		List<City> listCity  = new LinkedList<>();		
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery("SELECT ID, Name, Population FROM city");			
+		List<City> listCity  = new LinkedList<>();	
+		try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery("SELECT ID, Name, Population FROM city") ){			
 			while(resultSet.next()){
 				City city = new City();
 				String id = resultSet.getString("ID");
@@ -75,30 +64,15 @@ public class CityConnectDAO implements CityDAO, AutoCloseable {
 				listCity.add(city);
 			} 
 		} catch (SQLException e) {
-			throw new DAOException(e);
-		} finally {
-			try {
-				statement.close();
-			} catch (SQLException e) {
-				throw new DAOException(e);
-			}
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				throw new DAOException(e);
-			}
-		}
+			throw new DAOException("Error in getAll method", e);
+		} 
 		return listCity;
 	}
 
 	@Override
 	public List<City> findByName(String name) throws DAOException {
 		List<City> listCity  = new LinkedList<>();
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery("SELECT ID, Name, Population FROM city");
+		try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery("SELECT ID, Name, Population FROM city") ){
 			while(resultSet.next()){
 				City city = new City();;
 				String nameForSearch = resultSet.getString("Name");
@@ -112,19 +86,8 @@ public class CityConnectDAO implements CityDAO, AutoCloseable {
 				}
 			}		
 		} catch (SQLException e) {
-			throw new DAOException(e);
-		} finally {
-			try {
-				statement.close();
-			} catch (SQLException e) {
-				throw new DAOException(e);
-			}
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				throw new DAOException(e);
-			}
-		}			
+			throw new DAOException("Error in findByName method", e);
+		} 			
 		return listCity;
 	}
 
