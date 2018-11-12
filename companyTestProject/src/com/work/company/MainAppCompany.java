@@ -6,11 +6,17 @@ public class MainAppCompany {
 		long start;
 		long end;
 		start = System.currentTimeMillis();
-		try (CityConnectDAO cityConnectDAO = new CityConnectDAO()){		
+		try (CityConnectDAO cityConnectDAO = new CityConnectDAO()){	
+			//cityConnectDAO.math();
 			System.out.println(cityConnectDAO.getAll());
 			System.out.println(cityConnectDAO.findByName("Minsk"));
 			System.out.println(cityConnectDAO.findByName("Brest"));
 			System.out.println(cityConnectDAO.findByName("Grodno"));
+			cityConnectDAO.addValues("Stry", "BLR", 1234);
+			System.out.println(cityConnectDAO.getAll());
+			cityConnectDAO.deleteByID(4081);
+			System.out.println(cityConnectDAO.findByName("Stry"));
+			
 		} catch (DAOException e) {			
 			e.printStackTrace();
 		} 

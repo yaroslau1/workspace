@@ -4,6 +4,7 @@ public class City {
 	private int id;
 	private int population;
 	private String name;
+	private String countryCode;
 	
 	public City() {
 	}
@@ -20,6 +21,10 @@ public class City {
 		this.name = name;
 	}
 	
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
+	
 	public int getId () {
 		return this.id;
 	}
@@ -32,13 +37,17 @@ public class City {
 		return this.name;
 	}
 	
+	public String getCountryCode() {
+		return this.countryCode;
+	}
+	
 	public void showCity() {
 		System.out.println(id + " " + name + " " + population);
 	}
 	
 	@Override
 	public String toString() {
-		return id + " " + name + " " + population;
+		return id + " " + name + " " + countryCode + " " + population;
 	}
 
 }
