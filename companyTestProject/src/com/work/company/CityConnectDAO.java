@@ -33,7 +33,8 @@ public class CityConnectDAO implements CityDAO, AutoCloseable {
 			connection = DriverManager.getConnection(url, user, pass);
 			statements.add(connection.prepareStatement("SELECT ID, Name, CountryCode, Population FROM city"));
 			statements.add(connection.prepareStatement("INSERT INTO world.city (Name, CountryCode, Population) VALUES (?, ?, ?)"));
-			statements.add(connection.prepareStatement("DELETE FROM city WHERE id = ?;"));
+			statements.add(connection.prepareStatement("DELETE FROM city WHERE id = ?"));
+			statements.add(connection.prepareStatement("UPDATE city SET Name = ?, Population = ? WHERE Id = ?"));
 		} catch (IOException e) {
 			throw new DAOException("Error in constructor with file opening", e);
 		} catch (InstantiationException e) {
@@ -134,6 +135,17 @@ public class CityConnectDAO implements CityDAO, AutoCloseable {
 			statements.get(2).execute();
 		} catch (SQLException e) {
 			throw new DAOException("error in delete city \n", e);			
+		}
+	}
+	
+	public void updateById(int id) throws DAOException {
+		try {	
+			statements.get(3).setString(1, "Stryi");
+			statements.get(3).setInt(2, 12);
+			statements.get(3).setInt(3, id);
+			statements.get(3).execute();
+		} catch (SQLException e) {
+			throw new DAOException("error in update city \n", e);			
 		}
 	}
 
