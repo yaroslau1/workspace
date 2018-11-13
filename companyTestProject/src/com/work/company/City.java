@@ -9,6 +9,19 @@ public class City {
 	public City() {
 	}
 	
+	public City(int id, String name, int population, String countryCode) {
+		this.id = id;
+		this.population = population;
+		this.name = name;
+		this.countryCode = countryCode;
+	}
+	
+	public City(String name, int population, String countryCode) {
+		this.population = population;
+		this.name = name;
+		this.countryCode = countryCode;
+	}
+	
 	public void setId(int id) {
 		this.id = id;
 	}

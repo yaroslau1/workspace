@@ -14,11 +14,11 @@ public class MainAppCompany {
 			System.out.println(cityConnectDAO.findByName("Grodno"));
 			//cityConnectDAO.addValues("Stry", "BLR", 1234);
 			System.out.println(cityConnectDAO.getAll());
-			cityConnectDAO.deleteByID(4081);
-			cityConnectDAO.deleteByID(4089);
-			cityConnectDAO.deleteByID(4090);
-			cityConnectDAO.deleteByID(4091);
-			cityConnectDAO.updateById(4080);
+			//cityConnectDAO.deleteByID(4081);
+			//cityConnectDAO.deleteByID(4089);
+			//cityConnectDAO.deleteByID(4090);
+			//cityConnectDAO.deleteByID(4091);
+			//cityConnectDAO.updateById(4080);
 			System.out.println(cityConnectDAO.findByName("Stry"));
 			
 		} catch (DAOException e) {			
