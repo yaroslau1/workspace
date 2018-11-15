@@ -1,4 +1,4 @@
-package com.work.company;
+package com.work.other;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

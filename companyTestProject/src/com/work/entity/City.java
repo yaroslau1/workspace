@@ -1,4 +1,4 @@
-package com.work.company;
+package com.work.entity;
 
 public class City {
 	private int id;

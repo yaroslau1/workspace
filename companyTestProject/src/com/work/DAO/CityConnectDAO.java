@@ -1,4 +1,4 @@
-package com.work.company;
+package com.work.DAO;
 
 
 import java.io.IOException;
@@ -11,6 +11,9 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+
+import com.work.entity.City;
+import com.work.exeption.DAOException;
 
 public class CityConnectDAO implements CityDAO, AutoCloseable {
 
@@ -136,7 +139,7 @@ public class CityConnectDAO implements CityDAO, AutoCloseable {
 		}
 	}
 
-	public void addValues(City city) throws DAOException {
+	public void insert(City city) throws DAOException {
 		try {
 			addValues.setString(1, city.getName());
 			addValues.setString(2, city.getCountryCode());
@@ -148,7 +151,7 @@ public class CityConnectDAO implements CityDAO, AutoCloseable {
 		}
 	}
 
-	public void deleteByID(int id) throws DAOException {
+	public void deleteById(int id) throws DAOException {
 		try {
 			deleteByID.setInt(1, id);
 			deleteByID.execute();
