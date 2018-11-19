@@ -10,22 +10,22 @@ public class MainAppCompany {
 		long start;
 		long end;
 		start = System.currentTimeMillis();
-		try (CityConnectDAO cityConnectDAO = new CityConnectDAO(); CountryConnectDAO connectDAO = new CountryConnectDAO()){	
+		try (CityConnectDAO cityConnectDAO = new CityConnectDAO(); CountryConnectDAO countryConnectDAO = new CountryConnectDAO()){	
 			//cityConnectDAO.math();
-			System.out.println( cityConnectDAO.getAll() );
-			System.out.println( cityConnectDAO.findByName("Minsk") );
-			System.out.println( cityConnectDAO.findByName("Brest") );
-			System.out.println( cityConnectDAO.findByName("Grodno") );
+			//System.out.println( cityConnectDAO.getAll() );
+			//System.out.println( cityConnectDAO.findByName("Minsk") );
+			//System.out.println( cityConnectDAO.findByName("Brest") );
+			//System.out.println( cityConnectDAO.findByName("Grodno") );
 			
 			//cityConnectDAO.addValues("Stry", "BLR", 1234);
-			System.out.println(cityConnectDAO.getAll());
-			System.out.println( connectDAO.getAll() );
+			//System.out.println(cityConnectDAO.getAll());
+			System.out.println( countryConnectDAO.getAll() );
 			//cityConnectDAO.deleteByID(4081);
 			//cityConnectDAO.deleteByID(4089);
 			//cityConnectDAO.deleteByID(4090);
 			//cityConnectDAO.deleteByID(4091);
 			//cityConnectDAO.updateById(4080);
-			System.out.println(cityConnectDAO.findByName("Stry"));
+			//System.out.println(cityConnectDAO.findByName("Stry"));
 			
 		} catch (DAOException e) {			
 			e.printStackTrace();

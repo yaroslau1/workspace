@@ -20,7 +20,7 @@ public class CountryConnectDAO implements CountryDAO, AutoCloseable{
 	private PreparedStatement getAll = null;
 	private PreparedStatement addValues = null;
 	private PreparedStatement deleteByCode = null;
-	private PreparedStatement updateByCode = null;
+	private PreparedStatement update = null;
 
 	public CountryConnectDAO() throws DAOException {
 		Properties property = new Properties();
@@ -38,7 +38,7 @@ public class CountryConnectDAO implements CountryDAO, AutoCloseable{
 			getAll = connection.prepareStatement("SELECT Capital, Name, Code, Population FROM country");
 			addValues = connection.prepareStatement("INSERT INTO world.country (Name, Code, Population, Capital) VALUES (?, ?, ?, ?)");
 			deleteByCode = connection.prepareStatement("DELETE FROM country WHERE Code = ?");
-			updateByCode = connection.prepareStatement("UPDATE country SET Name = ?, Population = ?, Capital = ? WHERE Code = ?");
+			update = connection.prepareStatement("UPDATE country SET Name = ?, Population = ?, Capital = ? WHERE Code = ?");
 		} catch (IOException e) {
 			throw new DAOException("Error in constructor with file opening", e);
 		} catch (InstantiationException e) {
@@ -54,7 +54,7 @@ public class CountryConnectDAO implements CountryDAO, AutoCloseable{
 
 	@Override
 	public void close() throws Exception {
-		SQLException exception = new SQLException("Some errors with closing \n");
+		SQLException exception = new SQLException("Some errors with closing countries");
 		if(getAll != null){
 			try {
 				getAll.close();
@@ -69,9 +69,9 @@ public class CountryConnectDAO implements CountryDAO, AutoCloseable{
 				exception.addSuppressed(e);
 			}
 		}
-		if(updateByCode != null){
+		if (update != null){
 			try {
-				updateByCode.close();
+				update.close();
 			} catch (SQLException e) {
 				exception.addSuppressed(e);
 			}
@@ -91,7 +91,7 @@ public class CountryConnectDAO implements CountryDAO, AutoCloseable{
 			}
 		}
 		if (exception.getSuppressed().length > 0) {
-			throw new DAOException("errors list \n", exception);
+			throw new DAOException("errors with closing PrepereStatement in countries DAO", exception);
 		}
 	}
 
@@ -102,17 +102,19 @@ public class CountryConnectDAO implements CountryDAO, AutoCloseable{
 			while (resultSet.next()){
 				Country country = new Country();
 				String code = resultSet.getString("Code");
-				String name = resultSet.getString("Name");
-				String capital = resultSet.getString("Capital");
-				String population = resultSet.getString("Population");
-				country.setName(name);
-				country.setCode(code);
-				if ( capital != null) {
-					country.setCapital(Integer.parseInt(capital));
-				} else {
-					country.setCapital(0);
+				if (!resultSet.wasNull()) {
+					country.setCode(code);
 				}
-				country.setPopularion(Integer.parseInt(population));
+				String name = resultSet.getString("Name");
+				if (!resultSet.wasNull()) {
+					country.setName(name);
+				}
+				String capital = resultSet.getString("Capital");
+				if (!resultSet.wasNull()) {
+					country.setCapital( Integer.parseInt(capital) );
+				}
+				String population = resultSet.getString("Population");				 
+				country.setPopularion( Integer.parseInt(population) );
 				listCountry.add(country);
 			}
 			return listCountry;
@@ -130,12 +132,18 @@ public class CountryConnectDAO implements CountryDAO, AutoCloseable{
 				String nameForSearch = resultSet.getString("Name");
 				if (nameForSearch.equals(name)) {
 					String code = resultSet.getString("Code");
+					if (!resultSet.wasNull()) {
+						country.setCode(code);
+					}
 					String capital = resultSet.getString("Capital");
+					if (!resultSet.wasNull()) {
+						country.setPopularion( Integer.parseInt(capital) );
+					}
 					String population = resultSet.getString("Population");
+					if (!resultSet.wasNull()) {
+						country.setPopularion( Integer.parseInt(population) );
+					}
 					country.setName(name);
-					country.setCode(code);
-					country.setPopularion(Integer.parseInt(population));
-					country.setPopularion(Integer.parseInt(capital));
 					listCountry.add(country);
 				}
 			}
@@ -154,7 +162,7 @@ public class CountryConnectDAO implements CountryDAO, AutoCloseable{
 			addValues.setInt(3, country.getCapital());
 			addValues.execute();
 		} catch (SQLException e) {
-			throw new DAOException("error in add city \n", e);
+			throw new DAOException("error in add country", e);
 		}
 	}
 
@@ -164,21 +172,21 @@ public class CountryConnectDAO implements CountryDAO, AutoCloseable{
 			deleteByCode.setString(1, code);
 			deleteByCode.execute();
 		} catch (SQLException e) {
-			throw new DAOException("error in delete city \n", e);
+			throw new DAOException("error in delete country", e);
 		}
 
 	}
 
 	@Override
-	public void updateByCode(Country country) throws DAOException {
+	public void update(Country country) throws DAOException {
 		try {
-			updateByCode.setString(1, country.getName());
-			updateByCode.setInt(2, country.getPopulation());
-			updateByCode.setInt(3, country.getCapital());
-			updateByCode.setString(4, country.getCode());
-			updateByCode.execute();
+			update.setString(1, country.getName());
+			update.setInt(2, country.getPopulation());
+			update.setInt(3, country.getCapital());
+			update.setString(4, country.getCode());
+			update.execute();
 		} catch (SQLException e) {
-			throw new DAOException("error in update city \n", e);
+			throw new DAOException("error in update country", e);
 		}
 	}
 

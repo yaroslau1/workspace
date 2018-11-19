@@ -21,7 +21,7 @@ public class CityConnectDAO implements CityDAO, AutoCloseable {
 	private PreparedStatement getAll = null;
 	private PreparedStatement addValues = null;
 	private PreparedStatement deleteByID = null;
-	private PreparedStatement updateByID = null;
+	private PreparedStatement update = null;
 
 	public CityConnectDAO() throws DAOException {
 		Properties property = new Properties();
@@ -39,7 +39,7 @@ public class CityConnectDAO implements CityDAO, AutoCloseable {
 			getAll = connection.prepareStatement("SELECT ID, Name, CountryCode, Population FROM city");
 			addValues = connection.prepareStatement("INSERT INTO world.city (Name, CountryCode, Population) VALUES (?, ?, ?)");
 			deleteByID = connection.prepareStatement("DELETE FROM city WHERE id = ?");
-			updateByID = connection.prepareStatement("UPDATE city SET Name = ?, Population = ? WHERE Id = ?");
+			update = connection.prepareStatement("UPDATE city SET Name = ?, Population = ? WHERE Id = ?");
 		} catch (IOException e) {
 			throw new DAOException("Error in constructor with file opening", e);
 		} catch (InstantiationException e) {
@@ -54,7 +54,7 @@ public class CityConnectDAO implements CityDAO, AutoCloseable {
 	}
 
 	public void close() throws DAOException {
-		SQLException exception = new SQLException("Some errors with closing \n");
+		SQLException exception = new SQLException("Some errors with closing");
 		if(getAll != null){
 			try {
 				getAll.close();
@@ -69,9 +69,9 @@ public class CityConnectDAO implements CityDAO, AutoCloseable {
 				exception.addSuppressed(e);
 			}
 		}
-		if(updateByID != null){
+		if(update != null){
 			try {
-				updateByID.close();
+				update.close();
 			} catch (SQLException e) {
 				exception.addSuppressed(e);
 			}
@@ -91,7 +91,7 @@ public class CityConnectDAO implements CityDAO, AutoCloseable {
 			}
 		}
 		if (exception.getSuppressed().length > 0) {
-			throw new DAOException("errors list \n", exception);
+			throw new DAOException("errors with closing PrepereStatement in city DAO", exception);
 		}
 	}
 
@@ -147,7 +147,7 @@ public class CityConnectDAO implements CityDAO, AutoCloseable {
 			addValues.execute();
 
 		} catch (SQLException e) {
-			throw new DAOException("error in add city \n", e);
+			throw new DAOException("error in add city", e);
 		}
 	}
 
@@ -156,18 +156,18 @@ public class CityConnectDAO implements CityDAO, AutoCloseable {
 			deleteByID.setInt(1, id);
 			deleteByID.execute();
 		} catch (SQLException e) {
-			throw new DAOException("error in delete city \n", e);
+			throw new DAOException("error in delete city", e);
 		}
 	}
 
-	public void updateById(City city) throws DAOException {
+	public void update(City city) throws DAOException {
 		try {
-			updateByID.setString(1, city.getName());
-			updateByID.setInt(2, city.getPopulation());
-			updateByID.setInt(3, city.getId());
-			updateByID.execute();
+			update.setString(1, city.getName());
+			update.setInt(2, city.getPopulation());
+			update.setInt(3, city.getId());
+			update.execute();
 		} catch (SQLException e) {
-			throw new DAOException("error in update city \n", e);
+			throw new DAOException("error in update city", e);
 		}
 	}
 }
